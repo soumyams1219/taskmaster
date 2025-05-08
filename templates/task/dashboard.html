@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>My Tasks</h2>
+<a href="{% url 'task:create_task' %}" class="btn btn-success mb-3">+ New Task</a>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Due date</th>
+            <th>Created at</th>
+            <th>Edit</th>
+            <th>Delete</th> 
+        </tr>
+    </thead>
+    <tbody>
+        {% if tasks %}
+        {% for task in tasks %}
+        <tr>
+            <td>{{task.title}}</td>
+            <td>{{task.description}}</td>
+            <td>{{task.status}}</td>
+            <td>{{task.priority}}</td>
+            <td>{{task.duedate}}</td>
+            <td>{{task.created_at}}</td>
+            <td><form>
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{task.id}}">
+               <a href="{% url 'task:edit_task' %}?id={{task.id}}" class="btn btn-primary">Edit</a>
+            </form></td>
+            <td>
+                <form action="{% url 'task:delete_task' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{task.id}}">
+                    <input type="submit" class="btn btn-danger" value="Delete"/>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="8" style="text-align:center;">No Tasks Found</td>
+        </tr>
+        {% endif %} 
+    </tbody>
+    
+</table>
+{% endblock %}
